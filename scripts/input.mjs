@@ -1,65 +1,7 @@
-import { MODULE_ID, L, setting, PHYSICAL_TYPES, isGroundToken, getActingToken } from "./config.mjs";
-import { placeDroppedItem, pickUp, previewGroundItem } from "./ground.mjs";
+import { MODULE_ID, setting, isGroundToken } from "./config.mjs";
+import { pickUp, previewGroundItem } from "./ground.mjs";
+import { isPlacing } from "./placement.mjs";
 import { lookSize, sizeUpdate, MIN_SIZE, MAX_SIZE } from "./appearance.mjs";
-
-/* ============================================ */
-/*  Drag & drop onto the canvas                 */
-/* ============================================ */
-
-function modifierHeld(event) {
-  const key = setting("dropKey");
-  if ( key === "none" ) return true;
-  if ( !event ) return false;
-  if ( key === "alt" ) return !!event.altKey;
-  if ( key === "shift" ) return !!event.shiftKey;
-  if ( key === "ctrl" ) return !!(event.ctrlKey || event.metaKey);
-  return true;
-}
-
-/** Item type straight from the drag data, if it's already known (avoids loading the document twice). */
-function quickType(data) {
-  return data?.data?.type ?? null;
-}
-
-function onDropCanvasData(_canvas, data, event) {
-  try {
-    if ( (data?.type !== "Item") || !setting("enableDrop") || !canvas?.ready ) return;
-    if ( !modifierHeld(event) ) return;
-    const t = quickType(data);
-    if ( t && !PHYSICAL_TYPES.includes(t) ) return;
-
-    let point = (Number.isFinite(data.x) && Number.isFinite(data.y)) ? { x: data.x, y: data.y } : null;
-    if ( !point && event ) {
-      try { point = canvas.canvasCoordinatesFromClient({ x: event.clientX, y: event.clientY }); } catch {}
-    }
-    if ( !point ) return;
-
-    // We take over from here – load the item and place it
-    (async () => {
-      const item = await CONFIG.Item.documentClass.fromDropData(data).catch(() => null);
-      if ( !item ) return ui.notifications.warn(L("Warn.ItemGone"));
-      if ( !PHYSICAL_TYPES.includes(item.type) ) return ui.notifications.warn(L("Warn.NotPhysical"));
-      await placeDroppedItem(item, point);
-    })().catch(err => console.error(`${MODULE_ID} |`, err));
-    return false;
-  } catch(err) {
-    console.error(`${MODULE_ID} |`, err);
-  }
-}
-
-/** Register our drop handler and move it in front of other modules (e.g. Item Piles), so it wins. */
-export function registerDrop() {
-  const id = Hooks.on("dropCanvasData", onDropCanvasData);
-  try {
-    const list = Hooks.events?.dropCanvasData;
-    if ( Array.isArray(list) ) {
-      const i = list.findIndex(h => h.id === id);
-      if ( i > 0 ) list.unshift(...list.splice(i, 1));
-    }
-  } catch(err) {
-    console.warn(`${MODULE_ID} | could not reorder drop hook`, err);
-  }
-}
 
 /* ============================================ */
 /*  Double-click on ground items                */
@@ -93,7 +35,7 @@ function isCanvasTarget(event) {
 }
 
 function onPointerDown(event) {
-  if ( (event.button !== 0) || !canvas?.ready || !isCanvasTarget(event) ) return;
+  if ( (event.button !== 0) || isPlacing() || !canvas?.ready || !isCanvasTarget(event) ) return;
   let point;
   try { point = canvas.canvasCoordinatesFromClient({ x: event.clientX, y: event.clientY }); }
   catch { point = canvas.stage.worldTransform.applyInverse({ x: event.clientX, y: event.clientY }); }
@@ -105,9 +47,9 @@ function onPointerDown(event) {
     && (Math.hypot(event.clientX - lastDown.x, event.clientY - lastDown.y) < 14);
   lastDown = isDouble ? { t: 0, x: 0, y: 0, id: null } : { t: now, x: event.clientX, y: event.clientY, id: token.id };
 
-  // The GM without a selected character may still select / drag ground items with single clicks
-  const gmFree = game.user.isGM && !getActingToken();
-  if ( gmFree && !isDouble ) return;
+  // The GM selects, moves, rotates and scales ground items with normal clicks
+  const isGM = game.user.isGM;
+  if ( isGM && !isDouble ) return;
 
   // Keep Foundry from selecting / targeting / opening sheets for these clicks
   event.stopImmediatePropagation();
@@ -116,7 +58,7 @@ function onPointerDown(event) {
   swallowDbl = performance.now();
   if ( !isDouble ) return;
 
-  if ( gmFree ) previewGroundItem(token);
+  if ( isGM ) previewGroundItem(token);
   else pickUp(token);
 }
 
@@ -162,7 +104,7 @@ function flushWheel() {
 }
 
 function onWheel(event) {
-  if ( !setting("wheelRotate") || !canvas?.ready || !isCanvasTarget(event) ) return;
+  if ( !setting("wheelRotate") || isPlacing() || !canvas?.ready || !isCanvasTarget(event) ) return;
   if ( event.ctrlKey || event.metaKey ) return; // leave browser zoom alone
   const tokens = canvas.tokens.controlled.filter(t => isGroundToken(t) && t.document.isOwner);
   if ( !tokens.length ) return;

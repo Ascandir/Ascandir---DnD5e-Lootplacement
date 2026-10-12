@@ -2,23 +2,35 @@
 
 Foundry VTT Modul für **dnd5e 6.x** (getestet gegen Foundry v14.368 / dnd5e 6.0.6).
 
-Gegenstände einfach in die Welt legen – **ohne Tiles** und ohne extra Actor:
+Der SL legt Gegenstände einfach in die Welt – **ohne Tiles**, ohne extra Actor und ohne Drag & Drop (kommt sich so nicht mit anderen Modulen wie Item Piles in die Quere).
 
-- **Ablegen (SL)** – einen Gegenstand aus der Seitenleiste, einem Kompendium oder einem Charakterbogen auf die Karte ziehen. Ein kleines Fenster fragt nach der Anzahl und ob er **versteckt** liegen soll (dann sieht ihn nur der SL, aufdecken per Rechtsklick → Auge).
-- **Ablegen (Spieler)** – Gegenstand aus dem eigenen Inventar auf die Karte ziehen (höchstens so weit vom eigenen Token wie eingestellt). Er verschwindet aus dem Inventar.
-- **Liegen** – der Gegenstand liegt als kleines, leicht schräges Bildchen am Boden. Beim Drüberfahren sieht man den Namen (bei Stapeln mit Anzahl, z. B. „Pfeil ×20“). Nicht identifizierte Gegenstände zeigen nur ihren Tarnnamen.
-- **Aufheben** – eigenen Token auswählen und **doppelt auf den Gegenstand klicken** (Token muss direkt daneben stehen). Bei Stapeln wird gefragt, wie viele. Hat der Charakter den Gegenstand schon, wird der Stapel aufgefüllt.
-- **Drehen & Skalieren** – liegenden Gegenstand als SL anklicken (auswählen) und am Mausrad drehen; mit Umschalt in feinen Schritten, mit **Alt + Mausrad** größer/kleiner.
-- **Eigenes Bild am Boden (SL)** – Rechtsklick auf den liegenden Gegenstand → Bild-Symbol links. Dort ein anderes Bild (z. B. mit transparentem Hintergrund) und die Größe einstellen. Das Item selbst behält beim Aufheben sein normales Bild. Mit „Für alle … merken“ bekommen künftig alle gleichnamigen Gegenstände automatisch dieses Bild und diese Größe.
-- **Stapeln** – legt man denselben Gegenstand auf ein Feld, auf dem er schon liegt, wächst der Stapel einfach.
-- **SL ohne ausgewählten Token** – Einfachklick zum Verschieben wie gewohnt, Doppelklick zeigt den Gegenstand als Vorschau.
+## Für den SL: Gegenstände ablegen
+
+1. **Rechtsklick** auf einen Gegenstand – in der Seitenleiste *Gegenstände*, in einem **Kompendium** oder im Inventar eines Charakter-/NSC-Bogens.
+2. **„Auf den Boden legen“** wählen. Das Bild des Gegenstands hängt jetzt halb durchsichtig an der Maus.
+3. **Linksklick** auf die Karte legt ihn genau dort ab. Weitere Klicks legen weitere ab (praktisch zum Verteilen).
+   - **Mausrad** dreht, **Umschalt + Mausrad** dreht fein, **Alt + Mausrad** macht ihn größer/kleiner.
+   - **Alt + Linksklick** legt ihn **versteckt** ab (nur der SL sieht ihn; aufdecken per Rechtsklick → Auge).
+4. **Rechtsklick** oder **Esc** beendet das Ablegen.
+
+Aus dem Inventar eines Bogens wird der Gegenstand **verschoben** (er verschwindet aus dem Inventar). Aus Seitenleiste und Kompendium wird eine **Kopie** abgelegt. Klickt man zweimal auf dieselbe Stelle, entsteht ein Stapel (z. B. „Pfeil ×40“).
+
+## Liegende Gegenstände bearbeiten (SL)
+
+- **Drehen & Skalieren** – liegenden Gegenstand anklicken (auswählen), dann **Mausrad** zum Drehen (Umschalt = fein) und **Alt + Mausrad** für die Größe. Geht auch mit mehreren gleichzeitig.
+- **Eigenes Bild am Boden** – Rechtsklick auf den liegenden Gegenstand → Bild-Symbol links. Dort ein anderes Bild (z. B. mit transparentem Hintergrund) und die Größe einstellen. Beim Aufheben behält das Item sein normales Bild. Mit **„Für alle … merken“** bekommen künftig alle gleichnamigen Gegenstände automatisch dieses Bild und diese Größe – schon in der Vorschau beim Ablegen.
+- **Doppelklick** zeigt den Gegenstand als Vorschau.
+
+## Für Spieler: Aufheben
+
+Eigenen Token auswählen und **doppelt auf den Gegenstand klicken** (Token muss direkt daneben stehen). Bei Stapeln wird gefragt, wie viele. Hat der Charakter den Gegenstand schon, wird sein Stapel aufgefüllt. Nicht identifizierte Gegenstände zeigen am Boden nur ihren Tarnnamen.
+
+Ein Spielleiter muss online sein, damit Spieler etwas aufheben können.
 
 ## Zusammenspiel mit anderen Modulen
 
 - **Persistent Thrown Weapons/Items:** funktioniert nebeneinander – jedes Modul kümmert sich um seine eigenen liegenden Gegenstände.
-- **Item Piles:** Dieses Modul übernimmt das Ablegen auf der Karte. Soll Item Piles weiterhin normale Drops bekommen, stelle in den Einstellungen eine **Taste beim Ablegen** ein (z. B. Alt) – dann legt dieses Modul nur ab, wenn die Taste gedrückt ist.
-
-Ein Spielleiter muss online sein, damit Gegenstände abgelegt und aufgehoben werden können.
+- **Item Piles & Co.:** Dieses Modul reagiert nicht auf Drag & Drop, sondern nur auf seinen eigenen Rechtsklick-Eintrag.
 
 ## Installation
 
@@ -30,10 +42,10 @@ https://github.com/Ascandir/Ascandir---DnD5e-Lootplacement/releases/latest/downl
 
 ## Einstellungen
 
-*Spieleinstellungen → Module konfigurieren → Ascandir - DnD5e Lootplacement*: Drag & Drop an/aus, Taste beim Ablegen, Spieler dürfen ablegen, Reichweiten, Nachfrage bei Stapeln, Größe am Boden, schräges Hinlegen, Drehen/Skalieren per Mausrad (Schrittweiten), Chat-Meldungen.
+*Spieleinstellungen → Module konfigurieren → Ascandir - DnD5e Lootplacement*: Reichweite beim Aufheben, Nachfrage bei Stapeln, Standardgröße am Boden, schräges Hinlegen, Drehen/Skalieren per Mausrad (Schrittweiten), Chat-Meldungen.
 
 ## Für Makros
 
 ```js
-game.modules.get("ascandir-dnd5e-lootplacement").api.place("Compendium.dnd5e.items.Item.<id>", { x: 1000, y: 800 }, { quantity: 2, hidden: true });
+game.modules.get("ascandir-dnd5e-lootplacement").api.place("Compendium.dnd5e.items.Item.<id>", { x: 1000, y: 800 }, { quantity: 2, hidden: true, rotation: 30, size: 0.6 });
 ```

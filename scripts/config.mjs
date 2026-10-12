@@ -29,19 +29,6 @@ export function registerSettings() {
     ...extra
   });
 
-  // --- Platzieren ---
-  reg("enableDrop", Boolean, true);
-  reg("dropKey", String, "none", {
-    choices: {
-      none: `${MODULE_ID}.Key.none`,
-      alt: `${MODULE_ID}.Key.alt`,
-      shift: `${MODULE_ID}.Key.shift`,
-      ctrl: `${MODULE_ID}.Key.ctrl`
-    }
-  });
-  reg("playersCanDrop", Boolean, true);
-  reg("dropRange", Number, 5, { range: { min: 0, max: 60, step: 5 } });
-
   // --- Aufheben ---
   reg("pickupRange", Number, 5, { range: { min: 0, max: 30, step: 5 } });
   reg("askQuantity", Boolean, true);
@@ -102,24 +89,6 @@ export function tokenGapDistance(a, b) {
   const dx = Math.max(0, bb.left - ab.right, ab.left - bb.right);
   const dy = Math.max(0, bb.top - ab.bottom, ab.top - bb.bottom);
   return ((Math.hypot(dx, dy) / canvas.dimensions.size) * d) + d;
-}
-
-/** Distance in ft between a token and a canvas point (0 = inside the token). */
-export function tokenPointDistance(token, point) {
-  const d = canvas.dimensions.distance;
-  if ( canvas.grid.isSquare ) {
-    try {
-      const A = cellRect(token);
-      const p = canvas.grid.getOffset(point);
-      const dr = Math.max(0, p.i - A.r1, A.r0 - p.i);
-      const dc = Math.max(0, p.j - A.c1, A.c0 - p.j);
-      return Math.max(dr, dc) * d;
-    } catch {}
-  }
-  const b = token.bounds;
-  const dx = Math.max(0, b.left - point.x, point.x - b.right);
-  const dy = Math.max(0, b.top - point.y, point.y - b.bottom);
-  return (Math.hypot(dx, dy) / canvas.dimensions.size) * d;
 }
 
 /** Is the given token one of our ground item tokens? */

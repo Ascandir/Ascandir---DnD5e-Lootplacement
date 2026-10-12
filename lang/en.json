@@ -2,12 +2,6 @@
   "ascandir-dnd5e-lootplacement": {
     "ChatAlias": "Loot",
     "Unknown": "Unknown Item",
-    "Key": {
-      "none": "None (always)",
-      "alt": "Hold Alt",
-      "shift": "Hold Shift",
-      "ctrl": "Hold Ctrl"
-    },
     "Warn": {
       "NoGM": "No GM online – items can't be dropped or picked up right now.",
       "SelectToken": "Select your token first.",
@@ -15,44 +9,22 @@
       "NoPermission": "You don't have permission to do that.",
       "ItemGone": "The item is no longer there.",
       "NotPhysical": "Only physical items (weapons, equipment, consumables, tools, loot, containers) can be placed on the ground.",
-      "PlayersCannotDrop": "The GM has disabled dropping items for players.",
-      "NoTokenOnScene": "Your character has no token on this scene.",
-      "ContainerNotEmpty": "Empty the container first – its contents would be lost otherwise."
+      "ContainerNotEmpty": "Empty the container first – its contents would be lost otherwise.",
+      "NoScene": "Open a scene first."
     },
     "Info": {
       "Preview": "Preview – changes here are not saved. Select a token to pick the item up."
     },
     "Dialog": {
-      "Quantity": "Quantity",
-      "Hidden": "Place hidden",
-      "HiddenHint": "Only the GM sees the item. Reveal it via right-click → eye icon.",
-      "Place": "Place",
       "Cancel": "Cancel",
       "PickupQuantity": "How many to pick up? (lying here: {total})",
       "PickUp": "Pick up",
       "PickUpAll": "All ({total})"
     },
     "Chat": {
-      "PickedUp": "<strong>{actor}</strong> picks up <strong>{item}</strong>.",
-      "Dropped": "<strong>{actor}</strong> drops <strong>{item}</strong>."
+      "PickedUp": "<strong>{actor}</strong> picks up <strong>{item}</strong>."
     },
     "Settings": {
-      "enableDrop": {
-        "Name": "Place items by drag & drop",
-        "Hint": "Dragging an item (from the sidebar, a compendium or a character sheet) onto the map leaves it lying there as a small image."
-      },
-      "dropKey": {
-        "Name": "Key while dropping",
-        "Hint": "Must be held when releasing the item for this module to place it. Useful if another module (e.g. Item Piles) should handle normal drops."
-      },
-      "playersCanDrop": {
-        "Name": "Players may drop items",
-        "Hint": "Players drag items from their inventory onto the map – they leave the inventory."
-      },
-      "dropRange": {
-        "Name": "Drop range (ft)",
-        "Hint": "How far from their own token players may drop items. 0 = unlimited. Does not apply to the GM."
-      },
       "pickupRange": {
         "Name": "Pick-up range (ft)",
         "Hint": "How close the own token must be to the item. 5 ft = adjacent (diagonals included)."
@@ -101,6 +73,11 @@
       "RememberHint": "Items with this name dropped in the future automatically get this picture and size.",
       "Save": "Save",
       "Reset": "Reset"
+    },
+    "Place": {
+      "Menu": "Place on the ground",
+      "MenuFromSheet": "Place on the ground (from inventory)",
+      "Hint": "{name}: left-click places it (Alt + click = hidden). Wheel rotates, Alt + wheel resizes. Right-click or Esc finishes."
     }
   }
 }

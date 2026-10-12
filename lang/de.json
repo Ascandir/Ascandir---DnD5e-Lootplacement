@@ -2,12 +2,6 @@
   "ascandir-dnd5e-lootplacement": {
     "ChatAlias": "Beute",
     "Unknown": "Unbekannter Gegenstand",
-    "Key": {
-      "none": "Keine (immer)",
-      "alt": "Alt gedrückt halten",
-      "shift": "Umschalt gedrückt halten",
-      "ctrl": "Strg gedrückt halten"
-    },
     "Warn": {
       "NoGM": "Kein Spielleiter online – Gegenstände können gerade nicht abgelegt oder aufgehoben werden.",
       "SelectToken": "Wähle zuerst deinen Token aus.",
@@ -15,44 +9,22 @@
       "NoPermission": "Dafür fehlen dir die Rechte.",
       "ItemGone": "Der Gegenstand ist nicht mehr da.",
       "NotPhysical": "Nur echte Gegenstände (Waffen, Ausrüstung, Verbrauchsgüter, Werkzeuge, Beute, Behälter) können auf den Boden gelegt werden.",
-      "PlayersCannotDrop": "Der Spielleiter hat das Ablegen von Gegenständen für Spieler ausgeschaltet.",
-      "NoTokenOnScene": "Dein Charakter hat keinen Token auf dieser Szene.",
-      "ContainerNotEmpty": "Leere den Behälter zuerst – sonst ginge sein Inhalt verloren."
+      "ContainerNotEmpty": "Leere den Behälter zuerst – sonst ginge sein Inhalt verloren.",
+      "NoScene": "Öffne zuerst eine Szene."
     },
     "Info": {
       "Preview": "Vorschau – Änderungen hier werden nicht gespeichert. Zum Aufheben einen Token auswählen."
     },
     "Dialog": {
-      "Quantity": "Anzahl",
-      "Hidden": "Versteckt ablegen",
-      "HiddenHint": "Nur der SL sieht den Gegenstand. Aufdecken per Rechtsklick → Auge-Symbol.",
-      "Place": "Ablegen",
       "Cancel": "Abbrechen",
       "PickupQuantity": "Wie viele aufheben? (liegen: {total})",
       "PickUp": "Aufheben",
       "PickUpAll": "Alle ({total})"
     },
     "Chat": {
-      "PickedUp": "<strong>{actor}</strong> hebt <strong>{item}</strong> auf.",
-      "Dropped": "<strong>{actor}</strong> legt <strong>{item}</strong> ab."
+      "PickedUp": "<strong>{actor}</strong> hebt <strong>{item}</strong> auf."
     },
     "Settings": {
-      "enableDrop": {
-        "Name": "Gegenstände per Drag & Drop ablegen",
-        "Hint": "Zieht man einen Gegenstand (aus der Seitenleiste, einem Kompendium oder einem Charakterbogen) auf die Karte, bleibt er dort als kleines Bild liegen."
-      },
-      "dropKey": {
-        "Name": "Taste beim Ablegen",
-        "Hint": "Muss beim Loslassen gedrückt sein, damit dieses Modul den Gegenstand ablegt. Praktisch, wenn ein anderes Modul (z. B. Item Piles) das normale Ablegen übernehmen soll."
-      },
-      "playersCanDrop": {
-        "Name": "Spieler dürfen Gegenstände ablegen",
-        "Hint": "Spieler ziehen Gegenstände aus ihrem Inventar auf die Karte – sie verschwinden dabei aus dem Inventar."
-      },
-      "dropRange": {
-        "Name": "Reichweite beim Ablegen (ft)",
-        "Hint": "Wie weit weg vom eigenen Token Spieler etwas ablegen dürfen. 0 = beliebig weit. Gilt nicht für den SL."
-      },
       "pickupRange": {
         "Name": "Reichweite beim Aufheben (ft)",
         "Hint": "Wie nah der eigene Token am Gegenstand stehen muss. 5 ft = direkt daneben (auch diagonal)."
@@ -101,6 +73,11 @@
       "RememberHint": "Künftig abgelegte Gegenstände mit diesem Namen bekommen automatisch dieses Bild und diese Größe.",
       "Save": "Speichern",
       "Reset": "Zurücksetzen"
+    },
+    "Place": {
+      "Menu": "Auf den Boden legen",
+      "MenuFromSheet": "Auf den Boden legen (aus dem Inventar)",
+      "Hint": "{name}: Linksklick legt ab (Alt + Klick = versteckt). Mausrad dreht, Alt + Mausrad ändert die Größe. Rechtsklick oder Esc beendet."
     }
   }
 }

@@ -1,5 +1,5 @@
 import {
-  MODULE_ID, L, setting, PHYSICAL_TYPES, tokenGapDistance, tokenPointDistance, getActingToken,
+  MODULE_ID, L, setting, PHYSICAL_TYPES, tokenGapDistance, getActingToken,
   groundItemData, sameItem, stackLabel, displayName, randomBetween
 } from "./config.mjs";
 import { requestGM, gmHandlers } from "./net.mjs";
@@ -42,32 +42,25 @@ function stackAt(scene, point, itemData) {
     if ( !g || !sameItem(g.itemData, itemData) ) return false;
     const cx = t.x + ((t.width * gs) / 2);
     const cy = t.y + ((t.height * gs) / 2);
-    return Math.hypot(point.x - cx, point.y - cy) <= gs * 0.4;
+    return Math.hypot(point.x - cx, point.y - cy) <= gs * 0.2;
   }) ?? null;
 }
 
-async function createGroundToken(scene, point, itemData, { hidden = false, droppedBy = null } = {}) {
+async function createGroundToken(scene, point, itemData, { hidden = false, rotation = null, size = null } = {}) {
   const gs = scene.grid.size;
-  const size = TOKEN_SIZE;
   const look = rememberedLook(itemData);
-  const scale = scaleForSize(look?.size ?? setting("groundSize"));
+  const scale = scaleForSize(size ?? look?.size ?? setting("groundSize"));
   const modes = CONST.TOKEN_DISPLAY_MODES;
-  // Lie inside the square it was dropped on, slightly jittered so several items don't cover each other
-  if ( (canvas.scene?.id === scene.id) && canvas.grid.isSquare ) {
-    try {
-      const c = canvas.grid.getCenterPoint(point);
-      point = { x: c.x + (randomBetween(-0.15, 0.15) * gs), y: c.y + (randomBetween(-0.15, 0.15) * gs) };
-    } catch {}
-  }
+  if ( rotation === null ) rotation = setting("randomRotation") ? randomBetween(-35, 35) : 0;
   const data = {
     name: stackLabel(itemData),
-    x: Math.round(point.x - ((gs * size) / 2)),
-    y: Math.round(point.y - ((gs * size) / 2)),
-    width: size,
-    height: size,
+    x: Math.round(point.x - ((gs * TOKEN_SIZE) / 2)),
+    y: Math.round(point.y - ((gs * TOKEN_SIZE) / 2)),
+    width: TOKEN_SIZE,
+    height: TOKEN_SIZE,
     hidden,
     texture: { src: look?.src || itemData.img, scaleX: scale, scaleY: scale },
-    rotation: setting("randomRotation") ? Math.round(randomBetween(-35, 35) + 360) % 360 : 0,
+    rotation: ((Math.round(rotation) % 360) + 360) % 360,
     lockRotation: false,
     displayName: modes.HOVER,
     displayBars: modes.NONE,
@@ -76,7 +69,7 @@ async function createGroundToken(scene, point, itemData, { hidden = false, dropp
     bar2: { attribute: null },
     sight: { enabled: false },
     actorLink: false,
-    flags: { [MODULE_ID]: { ground: { itemData, droppedBy } } }
+    flags: { [MODULE_ID]: { ground: { itemData } } }
   };
   const [doc] = await scene.createEmbeddedDocuments("Token", [data]);
   return doc;
@@ -95,36 +88,29 @@ async function putOnGround(scene, point, itemData, opts) {
 }
 
 /**
- * Place an item on the ground.
- * - itemUuid of an item owned by an actor → the pieces are moved out of that inventory.
- * - itemUuid of a sidebar / compendium item, or itemData → a copy is placed (GM only).
+ * Place an item on the ground. GM only.
+ * - itemUuid of an item owned by an actor → the item is moved out of that inventory.
+ * - itemUuid of a sidebar / compendium item, or itemData → a copy is placed.
  */
-gmHandlers.place = async ({ sceneId, point, itemUuid, itemData, quantity, hidden, actorName }, userId) => {
+gmHandlers.place = async ({ sceneId, point, itemUuid, itemData, quantity, hidden, rotation, size }, userId) => {
   const scene = game.scenes.get(sceneId);
   const user = game.users.get(userId);
-  if ( !scene || !user ) return { ok: false, reason: "gone" };
+  if ( !scene || !user?.isGM ) return { ok: false, reason: "permission" };
 
-  let item = itemUuid ? await fromUuid(itemUuid) : null;
+  const item = itemUuid ? await fromUuid(itemUuid) : null;
   if ( itemUuid && !item ) return { ok: false, reason: "gone" };
   const owner = (item?.parent instanceof Actor) ? item.parent : null;
-
-  if ( owner ) {
-    if ( !owner.testUserPermission(user, "OWNER") ) return { ok: false, reason: "permission" };
-  } else if ( !user.isGM ) return { ok: false, reason: "permission" };
 
   const source = item ?? itemData;
   if ( !source || !PHYSICAL_TYPES.includes(source.type) ) return { ok: false, reason: "type" };
 
-  let qty = Math.max(1, Math.floor(Number(quantity) || 1));
+  let qty = Math.max(1, Math.floor(Number(quantity ?? source.system?.quantity) || 1));
   if ( owner ) qty = Math.min(qty, item.system.quantity ?? 1);
   const data = groundItemData(source, qty);
 
   if ( owner ) await takeFrom(item, qty);
-  await putOnGround(scene, point, data, { hidden: !!hidden && user.isGM, droppedBy: actorName ?? owner?.name ?? null });
-  if ( owner && !user.isGM ) {
-    await chat(L("Chat.Dropped", { actor: actorName ?? owner.name, item: stackLabel(data) }));
-  }
-  return { ok: true };
+  await putOnGround(scene, point, data, { hidden: !!hidden, rotation: rotation ?? null, size: size ?? null });
+  return { ok: true, moved: !!owner };
 };
 
 gmHandlers.pickup = async ({ sceneId, tokenId, actorUuid, pickerTokenId, quantity }, userId) => {
@@ -164,93 +150,6 @@ gmHandlers.pickup = async ({ sceneId, tokenId, actorUuid, pickerTokenId, quantit
 /* ============================================ */
 /*  Client side                                 */
 /* ============================================ */
-
-/** Ask for a number (and, for the GM, whether the item lies hidden). */
-async function askPlacement({ title, max, value, gm }) {
-  const DialogV2 = foundry.applications.api.DialogV2;
-  const qtyField = (max === 1) && !gm ? "" : `
-    <div class="form-group">
-      <label>${L("Dialog.Quantity")}</label>
-      <div class="form-fields"><input type="number" name="qty" value="${value}" min="1" ${max ? `max="${max}"` : ""} step="1" autofocus></div>
-    </div>`;
-  const hiddenField = gm ? `
-    <div class="form-group">
-      <label>${L("Dialog.Hidden")}</label>
-      <div class="form-fields"><input type="checkbox" name="hidden"></div>
-      <p class="hint">${L("Dialog.HiddenHint")}</p>
-    </div>` : "";
-  try {
-    return await DialogV2.wait({
-      window: { title, icon: "fa-solid fa-sack" },
-      content: `<div class="alp-dialog">${qtyField}${hiddenField}</div>`,
-      buttons: [{
-        action: "ok",
-        label: L("Dialog.Place"),
-        icon: "fa-solid fa-hand-holding",
-        default: true,
-        callback: (event, button) => {
-          const f = button.form.elements;
-          return { qty: Number(f.qty?.value ?? value) || 1, hidden: !!f.hidden?.checked };
-        }
-      }, { action: "cancel", label: L("Dialog.Cancel"), icon: "fa-solid fa-xmark" }],
-      rejectClose: false
-    }).then(r => (r && (r !== "cancel")) ? r : null);
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Called after an Item was dropped onto the canvas.
- * @param {Item} item       The dropped item (owned by an actor, a world item or from a compendium)
- * @param {{x:number,y:number}} point  Canvas coordinates
- */
-export async function placeDroppedItem(item, point) {
-  if ( !PHYSICAL_TYPES.includes(item.type) ) return ui.notifications.warn(L("Warn.NotPhysical"));
-  const owner = (item.parent instanceof Actor) ? item.parent : null;
-  const isGM = game.user.isGM;
-
-  if ( !isGM ) {
-    if ( !owner?.isOwner ) return ui.notifications.warn(L("Warn.NoPermission"));
-    if ( !setting("playersCanDrop") ) return ui.notifications.warn(L("Warn.PlayersCannotDrop"));
-    const range = setting("dropRange");
-    if ( range > 0 ) {
-      const token = owner.isToken ? owner.token?.object : owner.getActiveTokens?.(true)?.[0];
-      if ( !token ) return ui.notifications.warn(L("Warn.NoTokenOnScene"));
-      if ( tokenPointDistance(token, point) > (range + 0.01) ) return ui.notifications.warn(L("Warn.TooFar", { range }));
-    }
-  }
-
-  // Containers with content would lose their content – keep it simple and refuse
-  if ( owner && (item.type === "container") ) {
-    const hasContent = owner.items.some(i => i.system.container === item.id);
-    if ( hasContent ) return ui.notifications.warn(L("Warn.ContainerNotEmpty"));
-  }
-
-  const have = Number(item.system.quantity) || 1;
-  let qty = have;
-  let hidden = false;
-  if ( isGM || (have > 1) ) {
-    const res = await askPlacement({ title: displayName(item), max: owner ? have : null, value: have, gm: isGM });
-    if ( !res ) return;
-    qty = res.qty;
-    hidden = res.hidden;
-  }
-
-  const payload = {
-    sceneId: canvas.scene.id, point, quantity: qty, hidden,
-    actorName: owner?.name ?? null
-  };
-  // Compendium / world items are sent as data, owned items by uuid so they can be moved
-  if ( owner ) payload.itemUuid = item.uuid;
-  else payload.itemData = groundItemData(item, qty);
-
-  const res = await requestGM("place", payload).catch(err => { console.error(err); return null; });
-  if ( res && !res.ok ) {
-    const key = { permission: "Warn.NoPermission", type: "Warn.NotPhysical" }[res.reason] ?? "Warn.ItemGone";
-    ui.notifications.warn(L(key));
-  }
-}
 
 /** Double-click on a ground item. */
 export async function pickUp(groundToken) {
@@ -302,7 +201,7 @@ async function askPickupQuantity(name, total) {
   }
 }
 
-/** GM without a selected token: show the item (read-only preview). */
+/** GM double-click: show the item (read-only preview). */
 export async function previewGroundItem(groundToken) {
   const ground = groundToken.document.getFlag(MODULE_ID, "ground");
   if ( !ground?.itemData ) return;
@@ -321,11 +220,13 @@ export const api = {
    * Place an item (Item document, uuid or item data) on the current scene. GM only.
    * @example game.modules.get("ascandir-dnd5e-lootplacement").api.place("Compendium.dnd5e.items.Item.xyz", {x: 1000, y: 800}, {quantity: 2})
    */
-  async place(itemOrUuid, point, { quantity = 1, hidden = false, sceneId } = {}) {
+  async place(itemOrUuid, point, { quantity = 1, hidden = false, rotation = null, size = null, sceneId } = {}) {
     if ( !game.user.isGM ) throw new Error("GM only");
     const item = (typeof itemOrUuid === "string") ? await fromUuid(itemOrUuid) : itemOrUuid;
     if ( !item ) throw new Error("Item not found");
-    const data = groundItemData(item, quantity);
-    return gmHandlers.place({ sceneId: sceneId ?? canvas.scene.id, point, itemData: data, quantity, hidden }, game.user.id);
+    const payload = { sceneId: sceneId ?? canvas.scene.id, point, quantity, hidden, rotation, size };
+    if ( item.parent instanceof Actor ) payload.itemUuid = item.uuid;
+    else payload.itemData = groundItemData(item, quantity);
+    return gmHandlers.place(payload, game.user.id);
   }
 };
