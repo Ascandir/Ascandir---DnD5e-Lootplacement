@@ -52,6 +52,10 @@ export function registerSettings() {
   reg("wheelRotate", Boolean, true);
   reg("wheelStep", Number, 15, { range: { min: 1, max: 90, step: 1 } });
   reg("wheelStepFine", Number, 3, { range: { min: 1, max: 45, step: 1 } });
+  reg("wheelScaleStep", Number, 0.05, { range: { min: 0.01, max: 0.5, step: 0.01 } });
+
+  // Remembered pictures / sizes per item (set in the "Bild & Größe" dialog)
+  game.settings.register(MODULE_ID, "appearanceMemory", { scope: "world", config: false, type: Object, default: {} });
 
   // --- Chat ---
   reg("chatMessages", Boolean, true);

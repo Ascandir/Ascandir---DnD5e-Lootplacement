@@ -70,8 +70,8 @@
         "Hint": "Gegenstände liegen leicht zufällig gedreht, damit es natürlicher aussieht."
       },
       "wheelRotate": {
-        "Name": "Mit dem Mausrad drehen",
-        "Hint": "Ist ein liegender Gegenstand ausgewählt, dreht das Mausrad ihn (statt zu zoomen). Umschalt gedrückt = feine Schritte."
+        "Name": "Mit dem Mausrad drehen und skalieren",
+        "Hint": "Ist ein liegender Gegenstand ausgewählt, dreht das Mausrad ihn (statt zu zoomen). Umschalt = feine Schritte, Alt = größer/kleiner."
       },
       "wheelStep": {
         "Name": "Mausrad: Schritt (°)",
@@ -81,10 +81,26 @@
         "Name": "Mausrad mit Umschalt: Schritt (°)",
         "Hint": "Feine Drehung, wenn beim Drehen Umschalt gedrückt ist."
       },
+      "wheelScaleStep": {
+        "Name": "Alt + Mausrad: Größenschritt (Felder)",
+        "Hint": "Um wie viel ein liegender Gegenstand pro Mausrad-Raster wächst oder schrumpft."
+      },
       "chatMessages": {
         "Name": "Chat-Meldungen",
         "Hint": "Meldet im Chat, wer etwas aufhebt oder ablegt."
       }
+    },
+    "Appearance": {
+      "Title": "Bild & Größe: {name}",
+      "HudTooltip": "Bild & Größe am Boden",
+      "Image": "Bild am Boden",
+      "ImageHint": "Nur für den liegenden Gegenstand – z. B. ein Bild mit transparentem Hintergrund. Beim Aufheben behält das Item sein normales Bild.",
+      "Size": "Größe (Felder)",
+      "SizeHint": "Auch per Alt + Mausrad, solange der Gegenstand ausgewählt ist.",
+      "Remember": "Für alle „{name}“ merken",
+      "RememberHint": "Künftig abgelegte Gegenstände mit diesem Namen bekommen automatisch dieses Bild und diese Größe.",
+      "Save": "Speichern",
+      "Reset": "Zurücksetzen"
     }
   }
 }

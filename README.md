@@ -8,7 +8,8 @@ Gegenstände einfach in die Welt legen – **ohne Tiles** und ohne extra Actor:
 - **Ablegen (Spieler)** – Gegenstand aus dem eigenen Inventar auf die Karte ziehen (höchstens so weit vom eigenen Token wie eingestellt). Er verschwindet aus dem Inventar.
 - **Liegen** – der Gegenstand liegt als kleines, leicht schräges Bildchen am Boden. Beim Drüberfahren sieht man den Namen (bei Stapeln mit Anzahl, z. B. „Pfeil ×20“). Nicht identifizierte Gegenstände zeigen nur ihren Tarnnamen.
 - **Aufheben** – eigenen Token auswählen und **doppelt auf den Gegenstand klicken** (Token muss direkt daneben stehen). Bei Stapeln wird gefragt, wie viele. Hat der Charakter den Gegenstand schon, wird der Stapel aufgefüllt.
-- **Drehen** – liegenden Gegenstand als SL anklicken (auswählen) und am Mausrad drehen. Mit gedrückter Umschalttaste in feinen Schritten.
+- **Drehen & Skalieren** – liegenden Gegenstand als SL anklicken (auswählen) und am Mausrad drehen; mit Umschalt in feinen Schritten, mit **Alt + Mausrad** größer/kleiner.
+- **Eigenes Bild am Boden (SL)** – Rechtsklick auf den liegenden Gegenstand → Bild-Symbol links. Dort ein anderes Bild (z. B. mit transparentem Hintergrund) und die Größe einstellen. Das Item selbst behält beim Aufheben sein normales Bild. Mit „Für alle … merken“ bekommen künftig alle gleichnamigen Gegenstände automatisch dieses Bild und diese Größe.
 - **Stapeln** – legt man denselben Gegenstand auf ein Feld, auf dem er schon liegt, wächst der Stapel einfach.
 - **SL ohne ausgewählten Token** – Einfachklick zum Verschieben wie gewohnt, Doppelklick zeigt den Gegenstand als Vorschau.
 
@@ -29,7 +30,7 @@ https://github.com/Ascandir/Ascandir---DnD5e-Lootplacement/releases/latest/downl
 
 ## Einstellungen
 
-*Spieleinstellungen → Module konfigurieren → Ascandir - DnD5e Lootplacement*: Drag & Drop an/aus, Taste beim Ablegen, Spieler dürfen ablegen, Reichweiten, Nachfrage bei Stapeln, Größe am Boden, schräges Hinlegen, Drehen per Mausrad (Schrittweite), Chat-Meldungen.
+*Spieleinstellungen → Module konfigurieren → Ascandir - DnD5e Lootplacement*: Drag & Drop an/aus, Taste beim Ablegen, Spieler dürfen ablegen, Reichweiten, Nachfrage bei Stapeln, Größe am Boden, schräges Hinlegen, Drehen/Skalieren per Mausrad (Schrittweiten), Chat-Meldungen.
 
 ## Für Makros
 

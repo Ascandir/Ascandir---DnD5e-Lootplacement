@@ -3,6 +3,7 @@ import {
   groundItemData, sameItem, stackLabel, displayName, randomBetween
 } from "./config.mjs";
 import { requestGM, gmHandlers } from "./net.mjs";
+import { TOKEN_SIZE, rememberedLook, scaleForSize } from "./appearance.mjs";
 
 /* ============================================ */
 /*  GM side                                     */
@@ -47,8 +48,9 @@ function stackAt(scene, point, itemData) {
 
 async function createGroundToken(scene, point, itemData, { hidden = false, droppedBy = null } = {}) {
   const gs = scene.grid.size;
-  const size = 0.5;
-  const scale = Math.max(0.1, setting("groundSize") / size);
+  const size = TOKEN_SIZE;
+  const look = rememberedLook(itemData);
+  const scale = scaleForSize(look?.size ?? setting("groundSize"));
   const modes = CONST.TOKEN_DISPLAY_MODES;
   // Lie inside the square it was dropped on, slightly jittered so several items don't cover each other
   if ( (canvas.scene?.id === scene.id) && canvas.grid.isSquare ) {
@@ -64,7 +66,7 @@ async function createGroundToken(scene, point, itemData, { hidden = false, dropp
     width: size,
     height: size,
     hidden,
-    texture: { src: itemData.img, scaleX: scale, scaleY: scale },
+    texture: { src: look?.src || itemData.img, scaleX: scale, scaleY: scale },
     rotation: setting("randomRotation") ? Math.round(randomBetween(-35, 35) + 360) % 360 : 0,
     lockRotation: false,
     displayName: modes.HOVER,

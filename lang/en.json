@@ -70,8 +70,8 @@
         "Hint": "Items lie slightly rotated so it looks more natural."
       },
       "wheelRotate": {
-        "Name": "Rotate with the mouse wheel",
-        "Hint": "While a ground item is selected, the mouse wheel rotates it (instead of zooming). Hold Shift for fine steps."
+        "Name": "Rotate and resize with the mouse wheel",
+        "Hint": "While a ground item is selected, the mouse wheel rotates it (instead of zooming). Shift = fine steps, Alt = bigger/smaller."
       },
       "wheelStep": {
         "Name": "Mouse wheel: step (°)",
@@ -81,10 +81,26 @@
         "Name": "Mouse wheel with Shift: step (°)",
         "Hint": "Fine rotation while Shift is held."
       },
+      "wheelScaleStep": {
+        "Name": "Alt + mouse wheel: size step (squares)",
+        "Hint": "How much a ground item grows or shrinks per wheel notch."
+      },
       "chatMessages": {
         "Name": "Chat messages",
         "Hint": "Posts to chat who picks up or drops something."
       }
+    },
+    "Appearance": {
+      "Title": "Picture & size: {name}",
+      "HudTooltip": "Picture & size on the ground",
+      "Image": "Picture on the ground",
+      "ImageHint": "Only for the item lying on the ground – e.g. an image with a transparent background. When picked up, the item keeps its normal image.",
+      "Size": "Size (squares)",
+      "SizeHint": "Also via Alt + mouse wheel while the item is selected.",
+      "Remember": "Remember for all “{name}”",
+      "RememberHint": "Items with this name dropped in the future automatically get this picture and size.",
+      "Save": "Save",
+      "Reset": "Reset"
     }
   }
 }
