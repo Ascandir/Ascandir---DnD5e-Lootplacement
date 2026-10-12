@@ -66,7 +66,7 @@ async function createGroundToken(scene, point, itemData, { hidden = false, dropp
     hidden,
     texture: { src: itemData.img, scaleX: scale, scaleY: scale },
     rotation: setting("randomRotation") ? Math.round(randomBetween(-35, 35) + 360) % 360 : 0,
-    lockRotation: true,
+    lockRotation: false,
     displayName: modes.HOVER,
     displayBars: modes.NONE,
     disposition: CONST.TOKEN_DISPOSITIONS.NEUTRAL,

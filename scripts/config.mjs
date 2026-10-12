@@ -49,6 +49,9 @@ export function registerSettings() {
   // --- Aussehen ---
   reg("groundSize", Number, 0.4, { range: { min: 0.15, max: 1, step: 0.05 } });
   reg("randomRotation", Boolean, true);
+  reg("wheelRotate", Boolean, true);
+  reg("wheelStep", Number, 15, { range: { min: 1, max: 90, step: 1 } });
+  reg("wheelStepFine", Number, 3, { range: { min: 1, max: 45, step: 1 } });
 
   // --- Chat ---
   reg("chatMessages", Boolean, true);

@@ -69,6 +69,18 @@
         "Name": "Slightly random rotation",
         "Hint": "Items lie slightly rotated so it looks more natural."
       },
+      "wheelRotate": {
+        "Name": "Rotate with the mouse wheel",
+        "Hint": "While a ground item is selected, the mouse wheel rotates it (instead of zooming). Hold Shift for fine steps."
+      },
+      "wheelStep": {
+        "Name": "Mouse wheel: step (°)",
+        "Hint": "Degrees per wheel notch."
+      },
+      "wheelStepFine": {
+        "Name": "Mouse wheel with Shift: step (°)",
+        "Hint": "Fine rotation while Shift is held."
+      },
       "chatMessages": {
         "Name": "Chat messages",
         "Hint": "Posts to chat who picks up or drops something."

@@ -126,7 +126,50 @@ function onDblClick(event) {
   }
 }
 
+/* ============================================ */
+/*  Rotate selected ground items with the wheel  */
+/* ============================================ */
+
+const pendingRotation = new Map();
+let rotationTimer = null;
+
+/** Save the new rotations shortly after the wheel stops (one update instead of dozens). */
+function flushRotation() {
+  rotationTimer = null;
+  const updates = [...pendingRotation.entries()].map(([_id, rotation]) => ({ _id, rotation, lockRotation: false }));
+  pendingRotation.clear();
+  if ( updates.length && canvas.scene ) {
+    canvas.scene.updateEmbeddedDocuments("Token", updates).catch(err => console.error(`${MODULE_ID} |`, err));
+  }
+}
+
+function onWheel(event) {
+  if ( !setting("wheelRotate") || !canvas?.ready || !isCanvasTarget(event) ) return;
+  if ( event.ctrlKey || event.metaKey || event.altKey ) return; // leave browser zoom & other modifiers alone
+  const tokens = canvas.tokens.controlled.filter(t => isGroundToken(t) && t.document.isOwner);
+  if ( !tokens.length ) return;
+  const delta = event.deltaY || event.deltaX; // Shift+wheel turns into a horizontal scroll in some browsers
+  if ( !delta ) return;
+
+  // Rotate instead of zooming
+  event.preventDefault();
+  event.stopImmediatePropagation();
+
+  const step = event.shiftKey ? setting("wheelStepFine") : setting("wheelStep");
+  const dir = Math.sign(delta);
+  for ( const t of tokens ) {
+    const current = pendingRotation.get(t.id) ?? t.document.rotation ?? 0;
+    const next = (((current + (dir * step)) % 360) + 360) % 360;
+    pendingRotation.set(t.id, next);
+    // Show it immediately, the server update follows when the wheel stops
+    try { if ( t.mesh ) t.mesh.angle = next; } catch {}
+  }
+  clearTimeout(rotationTimer);
+  rotationTimer = setTimeout(flushRotation, 250);
+}
+
 export function registerInput() {
+  window.addEventListener("wheel", onWheel, { capture: true, passive: false });
   window.addEventListener("pointerdown", onPointerDown, { capture: true });
   window.addEventListener("pointerup", onPointerUp, { capture: true });
   window.addEventListener("dblclick", onDblClick, { capture: true });

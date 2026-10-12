@@ -69,6 +69,18 @@
         "Name": "Leicht schräg hinlegen",
         "Hint": "Gegenstände liegen leicht zufällig gedreht, damit es natürlicher aussieht."
       },
+      "wheelRotate": {
+        "Name": "Mit dem Mausrad drehen",
+        "Hint": "Ist ein liegender Gegenstand ausgewählt, dreht das Mausrad ihn (statt zu zoomen). Umschalt gedrückt = feine Schritte."
+      },
+      "wheelStep": {
+        "Name": "Mausrad: Schritt (°)",
+        "Hint": "Um wie viel Grad sich der Gegenstand pro Mausrad-Raster dreht."
+      },
+      "wheelStepFine": {
+        "Name": "Mausrad mit Umschalt: Schritt (°)",
+        "Hint": "Feine Drehung, wenn beim Drehen Umschalt gedrückt ist."
+      },
       "chatMessages": {
         "Name": "Chat-Meldungen",
         "Hint": "Meldet im Chat, wer etwas aufhebt oder ablegt."
