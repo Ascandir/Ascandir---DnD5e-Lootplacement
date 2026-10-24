@@ -1,6 +1,6 @@
 # Ascandir - DnD5e Lootplacement
 
-Foundry VTT Modul für **dnd5e 6.x** (getestet gegen Foundry v14.368 / dnd5e 6.0.6).
+Foundry VTT Modul für **dnd5e 6.x** (getestet gegen Foundry v14.369.1 / dnd5e 6.0.6).
 
 Der SL legt Gegenstände einfach in die Welt – **ohne Tiles**, ohne extra Actor und ohne Drag & Drop (kommt sich so nicht mit anderen Modulen wie Item Piles in die Quere).
 
